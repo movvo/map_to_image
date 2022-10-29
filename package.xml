@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>map_to_image</name>
+  <version>0.0.0</version>
+  <description>ROS2 pkg to convert map to image</description>
+  <maintainer email="albert.arla@movvo.eu">Albert Arlà</maintainer>
+  <maintainer email="marti.bolet@movvo.eu">Martí Bolet</maintainer>
+  <maintainer email="bernat.gaston@movvo.eu">Bernat Gaston</maintainer>
+  <maintainer email="maria.mercade@movvo.eu">María Mercadé</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+ 
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+  <test_depend>ament_cmake_gtest</test_depend>
+</package>
