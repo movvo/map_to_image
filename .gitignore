@@ -1,0 +1,15 @@
+### VisualStudioCode ###
+# exclude everything
+**/.vscode
+
+# Compilation files
+**/log
+**/build
+**/install
+
+# Python imported classes
+**/__pycache__
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+**/.history

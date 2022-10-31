@@ -14,7 +14,7 @@ int main(int argc, char * argv[]) {
     rclcpp::init(argc, argv);
     rclcpp::executors::MultiThreadedExecutor executor;
 
-    std::shared_ptr<rclcpp::Node> nh = rclcpp::Node::make_shared("node_name");
+    std::shared_ptr<rclcpp::Node> nh = rclcpp::Node::make_shared("map_to_image");
     auto map_to_image_node = std::make_shared<map_to_image::MapToImage>(nh);
     if (map_to_image_node->Initialize()) {
         RCLCPP_INFO(nh->get_logger(), "MapToImage node successfully initialized");
