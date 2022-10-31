@@ -66,11 +66,12 @@ bool MapToImage::Initialize()
     map_sub_ = nh_->create_subscription<nav_msgs::msg::OccupancyGrid>(parameters.map_topic.as_string(), qos,
                                                                 std::bind(&MapToImage::GetMapImageCallback, this, _1));
 
+    rmw_qos_profile_t image_qos = qos.get_rmw_qos_profile();
     std::string mono_img_topic = parameters.mono_img_topic.as_string();
-    image_jpeg_pub_ = image_transport::create_publisher(nh_.get(), mono_img_topic);
+    image_jpeg_pub_ = image_transport::create_publisher(nh_.get(), nh_->get_name()+std::string("/")+mono_img_topic, image_qos);
 
     std::string encoded_img_topic = parameters.encoded_img_topic.as_string();
-    image_b64_pub_ = nh_->create_publisher<std_msgs::msg::String>(encoded_img_topic, qos);
+    image_b64_pub_ = nh_->create_publisher<std_msgs::msg::String>(nh_->get_name()+std::string("/")+encoded_img_topic, qos);
 
     return true;
 }
@@ -113,15 +114,13 @@ cv::Mat MapToImage::MapToMonoImage(nav_msgs::msg::MapMetaData map_info, std::vec
         switch (map_cell_value) {
             case -1:
                 map_mat.at<uchar>(y, x) = 127;
-            break;
-
+                break;
             case 0:
                 map_mat.at<uchar>(y, x) = 255;
-            break;
-
+                break;
             case 100:
                 map_mat.at<uchar>(y, x) = 0;
-            break;
+                break;
         }
       }
     }
