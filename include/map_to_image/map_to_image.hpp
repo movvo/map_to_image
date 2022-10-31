@@ -24,8 +24,6 @@
 #include "cv_bridge/cv_bridge.h"
 #include "image_transport/image_transport.hpp"
 
-//TODO: doxygen comments
-
 using namespace std::chrono_literals;
 
 namespace map_to_image {
@@ -62,18 +60,24 @@ protected:
 
 private:
   /*!
-    @brief It transforms the map into an image and publishes it
+    @brief It transforms the map into an image and publishes it in jpeg and base64 formats
     @param[in] msg Received OccupancyGrid msg
   */
   void GetMapImageCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
+  /*!
+    @brief It transforms the map into a cv Mat
+  */
   cv::Mat MapToMonoImage(const nav_msgs::msg::MapMetaData map_info, std::vector<int8_t> map_data);
+  /*!
+    @brief Encodes the image in base 64 format
+  */
   std::string base64_encode(unsigned char const*, size_t len, bool url = false);
 
   rclcpp::Node::SharedPtr nh_; /*!< RCLCPP Node */
-  rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_; /*!< Subscription to the OccupancyGrid topic */
+  rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_; /*!< Subscription to the OccupancyGrid map topic */
 
-  image_transport::Publisher image_jpeg_pub_; /*!< String message ROS2 publisher */
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr image_b64_pub_; /*!< String message ROS2 publisher */
+  image_transport::Publisher image_jpeg_pub_; /*!< Publisher of the image in jpeg */
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr image_b64_pub_; /*!< Publisher of the image encoded in base 64 */
 };
-} //namespace ros2_std_node
+} //namespace map_to_image
 #endif // MAP_TO_IMAGE_HPP_
