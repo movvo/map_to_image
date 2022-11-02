@@ -1,8 +1,6 @@
 /**:
   ros__parameters:
-    resolution:
-      width: 1920
-      height: 960
+    resolution_factor: 0.5
     map_topic: "map"
     mono_img_topic: "image_jpeg"
     endoded_img_topic: "image_encoded"

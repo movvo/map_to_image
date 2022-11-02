@@ -12,6 +12,7 @@
 #include <chrono>
 #include <memory>
 #include <string>
+#include <math.h>
 #include <stdlib.h>
 #include <boost/beast/core/detail/base64.hpp>
 
@@ -48,8 +49,7 @@ public:
   /// @brief ROS2 parameters
   typedef struct
   {
-    rclcpp::Parameter resolution_width;
-    rclcpp::Parameter resolution_height;
+    rclcpp::Parameter resolution_factor;
     rclcpp::Parameter map_topic;
     rclcpp::Parameter mono_img_topic;
     rclcpp::Parameter encoded_img_topic;

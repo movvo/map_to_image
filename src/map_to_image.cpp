@@ -35,8 +35,7 @@ MapToImage::MapToImage(rclcpp::Node::SharedPtr nh)
     nh_ = nh;
 
     // Declare
-    nh_->declare_parameter("resolution.width", 1024);
-    nh_->declare_parameter("resolution.height", 768);
+    nh_->declare_parameter("resolution_factor", 0.5);
     nh_->declare_parameter("map_topic", "map");
     nh_->declare_parameter("mono_img_topic", "image_jpeg");
     nh_->declare_parameter("endoded_img_topic", "image_encoded");
@@ -46,8 +45,7 @@ bool MapToImage::Initialize()
 {
     try {
         // Get parameters
-        parameters.resolution_width = nh_->get_parameter("resolution.width");
-        parameters.resolution_height = nh_->get_parameter("resolution.height");
+        parameters.resolution_factor = nh_->get_parameter("resolution_factor");
         parameters.map_topic = nh_->get_parameter("map_topic");
         parameters.mono_img_topic = nh_->get_parameter("mono_img_topic");
         parameters.encoded_img_topic = nh_->get_parameter("endoded_img_topic");
@@ -85,17 +83,17 @@ void MapToImage::GetMapImageCallback(const nav_msgs::msg::OccupancyGrid::SharedP
     cv::Mat mono_image = MapToMonoImage(map.info, map.data);
     image_jpeg_pub_.publish(cv_bridge::CvImage(std_msgs::msg::Header(), "mono8", mono_image).toImageMsg());
 
-    // Downscale the image using new  width and height
-    int down_width = parameters.resolution_width.as_int();
-    int down_height = parameters.resolution_height.as_int();
+    // Downscale the image according to the defined factor
+    int down_width = round(mono_image.cols*parameters.resolution_factor.as_double());
+    int down_height = round(mono_image.rows*parameters.resolution_factor.as_double());
     cv::Mat resized_down;
     // Resize down
     cv::resize(mono_image, resized_down, cv::Size(down_width, down_height), cv::INTER_LINEAR);
 
     //Convert file into base 64
     std::vector<uchar> buffer;
-    buffer.resize(static_cast<size_t>(mono_image.rows)*static_cast<size_t>(mono_image.cols));
-    cv::imencode(".jpg", mono_image, buffer);
+    buffer.resize(static_cast<size_t>(resized_down.rows)*static_cast<size_t>(resized_down.cols));
+    cv::imencode(".jpg", resized_down, buffer);
     std::string encoded_image = base64_encode(buffer.data(), buffer.size());
 
     // Publish encoded image
